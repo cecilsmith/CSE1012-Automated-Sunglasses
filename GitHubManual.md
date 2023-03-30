@@ -4,7 +4,7 @@ For this quick guide, the assumption will be made that the user will have Git in
 
 
 
-## Initial Git Install
+## Initial Git Clone
 
 To get this repo in your local filesystem, first navigate to your folder of choice in terminal.
 
