@@ -6,5 +6,5 @@ The project uses an Adafruit LTR390 to measure the UV light levels. Additionally
 
 ## Circuit Schematic
 
-![Circuit Schematic](Circuit Schematic.png) 
+![Circuit Schematic](Hardware/Circuit-Schematic.png) 
 
