@@ -2,7 +2,7 @@
 #include "Adafruit_LTR390.h"
 #include <Servo.h>
 
-#define potPin A0
+#define potPin A1
 
 Adafruit_LTR390 ltr = Adafruit_LTR390();
 Servo servoOne;
@@ -100,7 +100,10 @@ void setup()
 void loop()
 {
   dial = analogRead(potPin);
+  Serial.print("dial: ");
   Serial.println(dial);
+  Serial.print("servoPos: ");
+  Serial.println(servoPos);
   if (ltr.newDataAvailable())
   {
     Serial.print("UV data: ");
@@ -127,32 +130,177 @@ Serial.println(servoPos);
   delay(1000);
   */
 
-  if ((dial < 256) && (previousValue == 2 || 3 || 4))
+///try smthng
+/*
+  if ((dial < 256) && ((previousValue == 2) || (previousValue == 3) || (previousValue == 4)))
   {
     servoPos = up;
     previousValue = 1;
     servoOne.write(servoPos);
     Serial.println(servoPos);
+    Serial.println(previousValue);
   }
-  else if ((dial > 256) && (dial < 512) && (previousValue == 1 || 3 || 4))
+  else if ((dial >= 256) && (dial < 512) && ((previousValue == 1) || (previousValue == 3) || (previousValue == 4)))
   {
     // UVmode();
     previousValue = 2;
+    Serial.println(previousValue);
   }
-  else if ((dial > 512) && (dial < 768) && (previousValue == 1 || 2 || 4))
+  else if ((dial >= 512) && (dial < 768) && ((previousValue == 2) || (previousValue == 1) || (previousValue == 4)))
   {
+      previousValue = 3;
     // ambient mode???
     // ambientMode();
+    Serial.println(previousValue);
   }
-  else if ((dial > 768) && (previousValue == 1 || 2 || 3))
+  else if ((dial >= 768) && ((previousValue == 2) || (previousValue == 3) || (previousValue == 1)))
   {
+      previousValue = 4;
     servoPos = down;
     servoOne.write(servoPos);
     Serial.println(servoPos);
+    Serial.println(previousValue);
+  }
+  else
+  {
+  //nothing
   }
 
   delay(1000);
+}*/
+//right here
+
+if (dial < 256)
+{
+  if(previousValue == 2)
+  {
+     servoPos = up;
+    previousValue = 1;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+    Serial.println(previousValue);
+  }
+
+  if (previousValue == 3)
+  {
+     servoPos = up;
+    previousValue = 1;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+    Serial.println(previousValue);
+  }
+  
+  if (previousValue == 4)
+  {
+     servoPos = up;
+    previousValue = 1;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+    Serial.println(previousValue);
+  }
+  }
+  else{}
+
+
+  
+   
+  
+  if (dial >= 256)
+  {
+    if (dial < 512)
+    {
+      if(previousValue == 1)
+      {
+      // UVmode();
+      previousValue = 2;
+      Serial.println(previousValue);
+      }
+
+      if (previousValue == 3)
+      {
+      // UVmode();
+      previousValue = 2;
+      Serial.println(previousValue);
+      }
+  
+      if  (previousValue == 4)
+      {
+      // UVmode();
+      previousValue = 2;
+      Serial.println(previousValue);
+      }
+    } 
+  }
+  
+  if (dial >= 512)
+  {
+    if (dial < 768)
+    {
+      if(previousValue == 1)
+      {
+      previousValue = 3;
+      // ambient mode???
+      // ambientMode();
+      Serial.println(previousValue);
+      }
+
+      if (previousValue == 2)
+      {
+      previousValue = 3;
+      // ambient mode???
+      // ambientMode();
+      Serial.println(previousValue);
+      }
+  
+      if  (previousValue == 4)
+      {
+      previousValue = 3;
+      // ambient mode???
+      // ambientMode();
+      Serial.println(previousValue);
+      }
+    } 
+  }
+  
+  if (dial >= 768)
+  {
+    if(previousValue == 1)
+      {
+         previousValue = 4;
+    servoPos = down;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+    Serial.println(previousValue);
+      }
+
+      if (previousValue == 2)
+      {
+         previousValue = 4;
+    servoPos = down;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+    Serial.println(previousValue);
+      }
+  
+      if  (previousValue == 3)
+      {
+       previousValue = 4;
+    servoPos = down;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+    Serial.println(previousValue);
+      }
+  }
+  else
+  {
+  //nothing
+  }
+
+  delay(10000);
 }
+
+
+
 
 // To be added/modified
 /*
