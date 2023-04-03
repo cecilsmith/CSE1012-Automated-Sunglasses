@@ -134,17 +134,17 @@ Serial.println(servoPos);
     servoOne.write(servoPos);
     Serial.println(servoPos);
   }
-  else if ((dial > 256) && (dial < 512) && (previousValue != 2))
+  else if ((dial >= 256) && (dial < 512) && (previousValue != 2))
   {
     // UVmode();
     previousValue = 2;
   }
-  else if ((dial > 512) && (dial < 768) && (previousValue != 3))
+  else if ((dial >= 512) && (dial < 768) && (previousValue != 3))
   {
     // ambient mode???
     // ambientMode();
   }
-  else if ((dial > 768) && (previousValue != 4))
+  else if ((dial >= 768) && (previousValue != 4))
   {
     servoPos = down;
     servoOne.write(servoPos);
