@@ -1,5 +1,3 @@
-#define SERIAL
-
 #include <Arduino.h>
 #include "Adafruit_LTR390.h"
 #include <Servo.h>
@@ -13,7 +11,7 @@ Servo servoTwo;
 int servoPos = 90;
 int servo2Pos = 0;
 
-int servoPin = 5; // D5
+int servoPin = 5;  // D5
 int servoPin2 = 6; // D6
 
 int up = 90;  ////make sure this is actually the up position   ///this is the down position for the other servo
@@ -27,18 +25,16 @@ float amDanger = 100; // for testing purposes, find the actual dangerous levels
 int dial = 0;
 int previousValue = 0;
 
-
-
 void setup()
 {
   servoOne.attach(servoPin);
   servoOne.write(servoPos);
-  
+
   servoTwo.attach(servoPin2);
   servoTwo.write(servo2Pos);
 
   Serial.begin(9600);
-  
+
   Serial.println("Automated Sunglasses Initialize");
 
   if (!ltr.begin())
@@ -53,20 +49,122 @@ void setup()
   ltr.setResolution(LTR390_RESOLUTION_16BIT);
   ltr.setThresholds(100, 1000);
   ltr.configInterrupt(true, LTR390_MODE_UVS);
-  
 }
 
-
-
+// Control loop
 void loop()
 {
+  // Serial.print("dial: ");
+  // Serial.println(dial);
+  // Serial.print("servoPos: ");
+  // Serial.println(servoPos);
+
+  GetSensorData();
+
+  // Mode selectors
+  if ((dial < 256) && (previousValue != 1))
+  {
+    delay(50);
+    servoPos = up;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+
+    servo2Pos = down;
+    servoTwo.write(servo2Pos);
+    Serial.println(servo2Pos);
+
+    previousValue = 1;
+    Serial.println(previousValue);
+  }
+  else if ((dial >= 256) && (dial < 512) && (previousValue != 2) && (uvLight > uvDanger))
+  {
+    // UVmode();
+    Serial.println("UVmode");
+    delay(50);
+
+    servoPos = down;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+
+    servo2Pos = up;
+    servoTwo.write(servo2Pos);
+    Serial.println(servo2Pos);
+
+    previousValue = 2;
+    Serial.println(previousValue);
+  }
+
+  else if ((dial >= 256) && (dial < 512) && (previousValue != 6) && (uvLight < uvDanger))
+  {
+    delay(50);
+    servoPos = up;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+
+    servo2Pos = down;
+    servoTwo.write(servo2Pos);
+    Serial.println(servo2Pos);
+
+    previousValue = 6;
+    Serial.println(previousValue);
+  }
+
+  else if ((dial >= 512) && (dial < 768) && (previousValue != 3) && (amLight > amDanger))
+  {
+    Serial.println("AMBmode");
+    delay(50);
+
+    servoPos = down;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+
+    servo2Pos = up;
+    servoTwo.write(servo2Pos);
+    Serial.println(servo2Pos);
+
+    previousValue = 3;
+    Serial.println(previousValue);
+  }
+
+  else if ((dial >= 512) && (dial < 768) && (previousValue != 4) && (amLight < amDanger))
+  {
+
+    Serial.println("AMmode");
+    delay(50);
+
+    servoPos = up;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+
+    servo2Pos = down;
+    servoTwo.write(servo2Pos);
+    Serial.println(servo2Pos);
+
+    previousValue = 4;
+    Serial.println(previousValue);
+  }
+
+  else if ((dial >= 768) && (previousValue != 5))
+  {
+    delay(50);
+    servoPos = down;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
+
+    servo2Pos = up;
+    servoTwo.write(servo2Pos);
+    Serial.println(servo2Pos);
+
+    previousValue = 5;
+    Serial.println(previousValue);
+  }
+}
+
+// Gets the LTR data
+void GetLTRData()
+{
   dial = analogRead(potPin);
-  
-  //Serial.print("dial: ");
-  //Serial.println(dial);
-  //Serial.print("servoPos: ");
-  //Serial.println(servoPos);
-  
+
   if (ltr.newDataAvailable())
   {
     ltr.setMode(LTR390_MODE_UVS);
@@ -80,147 +178,4 @@ void loop()
     Serial.println(ltr.readALS());
     amLight = ltr.readALS();
   }
-
-
-  if ((dial < 256) && (previousValue != 1))
-  {
-    servoPos = up;
-    servoOne.write(servoPos);
-    Serial.println(servoPos);
-
-    servo2Pos = down;
-    servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
-
-    previousValue = 1;  
-    Serial.println(previousValue);
-    
-  }
-  else if ((dial >= 256) && (dial < 512) && (previousValue != 2)  && (uvLight > uvDanger))
-  {
-    // UVmode();
-    Serial.println("UVmode");
-    delay(10);
-     
-    servoPos = down;
-    servoOne.write(servoPos);
-    Serial.println(servoPos);
-      
-    servo2Pos = up;
-    servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
-      
-    previousValue = 2;
-    Serial.println(previousValue);
-  }
-
-  else if ((dial >= 256) && (dial < 512) && (previousValue != 6)  && (uvLight < uvDanger))
-   {
-      servoPos = up;
-      servoOne.write(servoPos);
-      Serial.println(servoPos);
-      
-      servo2Pos = down;
-      servoTwo.write(servo2Pos);
-      Serial.println(servo2Pos);
-
-       previousValue = 6;
-      Serial.println(previousValue);
-      }
-      
-  else if ((dial >= 512) && (dial < 768) && (previousValue != 3) && (amLight > amDanger))
-  {
-      Serial.println("AMBmode");
-      delay(10);
-   
-      servoPos = down;
-      servoOne.write(servoPos);
-      Serial.println(servoPos);
-      
-      servo2Pos = up;
-      servoTwo.write(servo2Pos);
-      Serial.println(servo2Pos);
-      
-      
-    previousValue = 3;
-    Serial.println(previousValue);
-  }
-
-  else if ((dial >= 512) && (dial < 768) && (previousValue != 5) && (amLight < amDanger))
-  {
-      Serial.println("AMmode");
-         delay(10);
-  
-      servoPos = up;
-      servoOne.write(servoPos);
-      Serial.println(servoPos);
-      
-      servo2Pos = down;
-      servoTwo.write(servo2Pos);
-      Serial.println(servo2Pos);
-      
-      
-    previousValue = 5;
-    Serial.println(previousValue);
-  }
-  
-  else if ((dial >= 768) && (previousValue != 4))
-  {
-    servoPos = down;
-    servoOne.write(servoPos);
-    Serial.println(servoPos);
-
-    servo2Pos = up;
-    servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
-
-    previousValue = 4;
-    Serial.println(previousValue);
-  }
-
-
 }
-
-//ltr.setMode(LTR390_MODE_ALS);
-  //if (ltr.getMode() == LTR390_MODE_ALS)
-  //{
-  //  Serial.println("In ALS mode");
-  //}
-  //else
-  //{
-  //  Serial.println("In UVS mode");
-  //}
-
-
-
-
-// To be added/modified
-/*
-void manualMode()
-{
-  // maybe manual mode? incorporate if buttons are used...
-}
-
-void ambientMode()
-{
-  // use uv code but sub in ambient light sensor
-}
-
-void UVmode()
-{
-
-  if ((uvLight > uvDanger) && (servoPos = up))
-  {
-    servoPos = down;
-    servoOne.write(servoPos);
-    Serial.println(servoPos);
-  }
-
-  else if ((uvLight < uvDanger) && (servoPos = down))
-  {
-    servoPos = up;
-    servoOne.write(servoPos);
-    Serial.println(servoPos);
-  }
-}
-*/
