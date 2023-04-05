@@ -160,11 +160,12 @@ void loop()
   }
 }
 
-// Gets the LTR data
-void GetLTRData()
+void GetSensorData()
 {
+  // Get potentiometer readings
   dial = analogRead(potPin);
 
+  // Check for LTR data
   if (ltr.newDataAvailable())
   {
     ltr.setMode(LTR390_MODE_UVS);
