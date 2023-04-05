@@ -54,44 +54,37 @@ void setup()
 // Control loop
 void loop()
 {
-  // Serial.print("dial: ");
-  // Serial.println(dial);
-  // Serial.print("servoPos: ");
-  // Serial.println(servoPos);
-
+  // Get data from LTR and potentiometer
   GetSensorData();
 
-  // Mode selectors
+  // Mode selector
+  // Set the servos to be in 'OFF' postion
   if ((dial < 256) && (previousValue != 1))
   {
     delay(50);
+    // Set the servos to be in the correct position
     servoPos = up;
     servoOne.write(servoPos);
-    Serial.println(servoPos);
-
     servo2Pos = down;
     servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
 
+    // Note which mode we were just in
     previousValue = 1;
-    Serial.println(previousValue);
   }
+  // Set servos to be in 'UV Mode' sensitive mode
   else if ((dial >= 256) && (dial < 512) && (previousValue != 2) && (uvLight > uvDanger))
   {
-    // UVmode();
+
     Serial.println("UVmode");
     delay(50);
 
     servoPos = down;
     servoOne.write(servoPos);
-    Serial.println(servoPos);
 
     servo2Pos = up;
     servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
 
     previousValue = 2;
-    Serial.println(previousValue);
   }
 
   else if ((dial >= 256) && (dial < 512) && (previousValue != 6) && (uvLight < uvDanger))
@@ -99,14 +92,11 @@ void loop()
     delay(50);
     servoPos = up;
     servoOne.write(servoPos);
-    Serial.println(servoPos);
 
     servo2Pos = down;
     servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
 
     previousValue = 6;
-    Serial.println(previousValue);
   }
 
   else if ((dial >= 512) && (dial < 768) && (previousValue != 3) && (amLight > amDanger))
@@ -116,14 +106,11 @@ void loop()
 
     servoPos = down;
     servoOne.write(servoPos);
-    Serial.println(servoPos);
 
     servo2Pos = up;
     servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
 
     previousValue = 3;
-    Serial.println(previousValue);
   }
 
   else if ((dial >= 512) && (dial < 768) && (previousValue != 4) && (amLight < amDanger))
@@ -134,14 +121,11 @@ void loop()
 
     servoPos = up;
     servoOne.write(servoPos);
-    Serial.println(servoPos);
 
     servo2Pos = down;
     servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
 
     previousValue = 4;
-    Serial.println(previousValue);
   }
 
   else if ((dial >= 768) && (previousValue != 5))
@@ -149,14 +133,11 @@ void loop()
     delay(50);
     servoPos = down;
     servoOne.write(servoPos);
-    Serial.println(servoPos);
 
     servo2Pos = up;
     servoTwo.write(servo2Pos);
-    Serial.println(servo2Pos);
 
     previousValue = 5;
-    Serial.println(previousValue);
   }
 }
 
