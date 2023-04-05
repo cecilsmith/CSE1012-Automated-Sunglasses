@@ -1,3 +1,5 @@
+#define SERIAL
+
 #include <Arduino.h>
 #include "Adafruit_LTR390.h"
 #include <Servo.h>
@@ -36,7 +38,8 @@ void setup()
   servoTwo.write(servo2Pos);
 
   Serial.begin(9600);
-  Serial.println("Adafruit LTR-390 test");
+  
+  Serial.println("Automated Sunglasses Initialize");
 
   if (!ltr.begin())
   {
@@ -46,61 +49,8 @@ void setup()
   }
   Serial.println("Found LTR sensor!");
 
-  //ltr.setMode(LTR390_MODE_ALS);
-  //if (ltr.getMode() == LTR390_MODE_ALS)
-  //{
-  //  Serial.println("In ALS mode");
-  //}
-  //else
-  //{
-  //  Serial.println("In UVS mode");
-  //}
-
   ltr.setGain(LTR390_GAIN_3);
-  Serial.print("Gain : ");
-  switch (ltr.getGain())
-  {
-  case LTR390_GAIN_1:
-    Serial.println(1);
-    break;
-  case LTR390_GAIN_3:
-    Serial.println(3);
-    break;
-  case LTR390_GAIN_6:
-    Serial.println(6);
-    break;
-  case LTR390_GAIN_9:
-    Serial.println(9);
-    break;
-  case LTR390_GAIN_18:
-    Serial.println(18);
-    break;
-  }
-
   ltr.setResolution(LTR390_RESOLUTION_16BIT);
-  Serial.print("Resolution : ");
-  switch (ltr.getResolution())
-  {
-  case LTR390_RESOLUTION_13BIT:
-    Serial.println(13);
-    break;
-  case LTR390_RESOLUTION_16BIT:
-    Serial.println(16);
-    break;
-  case LTR390_RESOLUTION_17BIT:
-    Serial.println(17);
-    break;
-  case LTR390_RESOLUTION_18BIT:
-    Serial.println(18);
-    break;
-  case LTR390_RESOLUTION_19BIT:
-    Serial.println(19);
-    break;
-  case LTR390_RESOLUTION_20BIT:
-    Serial.println(20);
-    break;
-  }
-
   ltr.setThresholds(100, 1000);
   ltr.configInterrupt(true, LTR390_MODE_UVS);
   
@@ -111,10 +61,12 @@ void setup()
 void loop()
 {
   dial = analogRead(potPin);
-  Serial.print("dial: ");
-  Serial.println(dial);
-  Serial.print("servoPos: ");
-  Serial.println(servoPos);
+  
+  //Serial.print("dial: ");
+  //Serial.println(dial);
+  //Serial.print("servoPos: ");
+  //Serial.println(servoPos);
+  
   if (ltr.newDataAvailable())
   {
     ltr.setMode(LTR390_MODE_UVS);
@@ -128,9 +80,6 @@ void loop()
     Serial.println(ltr.readALS());
     amLight = ltr.readALS();
   }
-   delay(700);
-
-Serial.println();
 
 
   if ((dial < 256) && (previousValue != 1))
@@ -150,16 +99,16 @@ Serial.println();
   else if ((dial >= 256) && (dial < 512) && (previousValue != 2)  && (uvLight > uvDanger))
   {
     // UVmode();
-Serial.println("UVmode");
-   delay(100);
+    Serial.println("UVmode");
+    delay(10);
      
-      servoPos = down;
-      servoOne.write(servoPos);
-      Serial.println(servoPos);
+    servoPos = down;
+    servoOne.write(servoPos);
+    Serial.println(servoPos);
       
-      servo2Pos = up;
-      servoTwo.write(servo2Pos);
-      Serial.println(servo2Pos);
+    servo2Pos = up;
+    servoTwo.write(servo2Pos);
+    Serial.println(servo2Pos);
       
     previousValue = 2;
     Serial.println(previousValue);
@@ -176,13 +125,13 @@ Serial.println("UVmode");
       Serial.println(servo2Pos);
 
        previousValue = 6;
-    Serial.println(previousValue);
+      Serial.println(previousValue);
       }
       
   else if ((dial >= 512) && (dial < 768) && (previousValue != 3) && (amLight > amDanger))
   {
-      Serial.println("AMmode");
-         delay(100);
+      Serial.println("AMBmode");
+      delay(10);
    
       servoPos = down;
       servoOne.write(servoPos);
@@ -200,7 +149,7 @@ Serial.println("UVmode");
   else if ((dial >= 512) && (dial < 768) && (previousValue != 5) && (amLight < amDanger))
   {
       Serial.println("AMmode");
-         delay(100);
+         delay(10);
   
       servoPos = up;
       servoOne.write(servoPos);
@@ -231,6 +180,16 @@ Serial.println("UVmode");
 
 
 }
+
+//ltr.setMode(LTR390_MODE_ALS);
+  //if (ltr.getMode() == LTR390_MODE_ALS)
+  //{
+  //  Serial.println("In ALS mode");
+  //}
+  //else
+  //{
+  //  Serial.println("In UVS mode");
+  //}
 
 
 
