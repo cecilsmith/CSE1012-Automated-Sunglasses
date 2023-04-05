@@ -18,7 +18,7 @@ int up = 90;  ////make sure this is actually the up position   ///this is the do
 int down = 0; ////make sure this is actually the down position   ///this is the up position for the other servo
 
 float uvLight;
-float uvDanger = 100; // for testing purposes, find the actual dangerous levels
+float uvDanger = 30; // found in testing
 float amLight;
 float amDanger = 100; // for testing purposes, find the actual dangerous levels
 
