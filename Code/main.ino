@@ -11,8 +11,8 @@ Servo servoTwo;
 int servoPos = 90;
 int servo2Pos = 0;
 
-int servoPin = 9;
-int servoPin2 = 8;
+int servoPin = 5; // D5
+int servoPin2 = 6; // D6
 
 int up = 90;  ////make sure this is actually the up position   ///this is the down position for the other servo
 int down = 0; ////make sure this is actually the down position   ///this is the up position for the other servo
