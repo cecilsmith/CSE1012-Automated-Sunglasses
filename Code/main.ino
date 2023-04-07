@@ -27,6 +27,7 @@ int previousValue = 0;
 
 void setup()
 {
+  // Attach servos and write inital position
   servoOne.attach(servoPin);
   servoOne.write(servoPos);
 
@@ -45,6 +46,7 @@ void setup()
   }
   Serial.println("Found LTR sensor!");
 
+  // Set the settings for the LTR
   ltr.setGain(LTR390_GAIN_3);
   ltr.setResolution(LTR390_RESOLUTION_16BIT);
   ltr.setThresholds(100, 1000);
@@ -61,8 +63,7 @@ void loop()
   // Set the servos to be in 'OFF' postion
   if ((dial < 256) && (previousValue != 1))
   {
-    delay(50);
-    // Set the servos to be in the correct position
+    // If 'ON' sunglasses down
     servoPos = up;
     servoOne.write(servoPos);
     servo2Pos = down;
@@ -74,10 +75,7 @@ void loop()
   // Set servos to be in 'UV Mode' sensitive mode
   else if ((dial >= 256) && (dial < 512) && (previousValue != 2) && (uvLight > uvDanger))
   {
-
-    Serial.println("UVmode");
-    delay(50);
-
+    // If UV light reaches danger levels, sunglasses down
     servoPos = down;
     servoOne.write(servoPos);
 
@@ -89,7 +87,7 @@ void loop()
 
   else if ((dial >= 256) && (dial < 512) && (previousValue != 6) && (uvLight < uvDanger))
   {
-    delay(50);
+    // If UV light is less than danger levels, sunglasses up
     servoPos = up;
     servoOne.write(servoPos);
 
@@ -98,11 +96,11 @@ void loop()
 
     previousValue = 6;
   }
-
+  // Ambient light control
   else if ((dial >= 512) && (dial < 768) && (previousValue != 3) && (amLight > amDanger))
   {
-    Serial.println("AMBmode");
-    delay(50);
+    // If light level is greater than the comfortable level, sunglasses down
+    Serial.println("AMmode");
 
     servoPos = down;
     servoOne.write(servoPos);
@@ -112,12 +110,10 @@ void loop()
 
     previousValue = 3;
   }
-
   else if ((dial >= 512) && (dial < 768) && (previousValue != 4) && (amLight < amDanger))
   {
-
+    // If light level is less than the comfortable level, sunglasses up
     Serial.println("AMmode");
-    delay(50);
 
     servoPos = up;
     servoOne.write(servoPos);
@@ -130,7 +126,7 @@ void loop()
 
   else if ((dial >= 768) && (previousValue != 5))
   {
-    delay(50);
+    // If 'OFF' sunglasses up
     servoPos = down;
     servoOne.write(servoPos);
 
@@ -150,14 +146,16 @@ void GetSensorData()
   if (ltr.newDataAvailable())
   {
     ltr.setMode(LTR390_MODE_UVS);
+    // Delay for swapping of modes
     delay(100);
-    Serial.print("UV data: ");
-    Serial.println(ltr.readUVS());
+    Serial.print("UV Data: ");
     uvLight = ltr.readUVS();
+    Serial.println(uvLight);
     ltr.setMode(LTR390_MODE_ALS);
+    // Delay for swapping of modes
     delay(100);
-    Serial.print("AMBIENT LIGHT: ");
-    Serial.println(ltr.readALS());
+    Serial.print("AMBIENT Light Level: ");
     amLight = ltr.readALS();
+    Serial.println(amLight);
   }
 }
