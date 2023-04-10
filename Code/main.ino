@@ -8,14 +8,14 @@ Adafruit_LTR390 ltr = Adafruit_LTR390();
 Servo servoOne;
 Servo servoTwo;
 
-int servoPos = 90;
-int servo2Pos = 0;
-
 int servoPin = 5;  // D5
 int servoPin2 = 6; // D6
 
-int up = 90;  ////make sure this is actually the up position   ///this is the down position for the other servo
-int down = 0; ////make sure this is actually the down position   ///this is the up position for the other servo
+int up = 90;  // this is the down position for the other servo
+int down = 0; // this is the up position for the other servo
+
+int servoPos = up;
+int servo2Pos = down;
 
 float uvLight;
 float uvDanger = 30; // found in testing
@@ -23,11 +23,12 @@ float amLight;
 float amDanger = 100; // for testing purposes, find the actual dangerous levels
 
 int dial = 0;
-int previousValue = 0;
+
+bool sunglassesState = false;
 
 void setup()
 {
-  // Attach servos and write inital position
+  // Attach servos and write inital position (DOWN)
   servoOne.attach(servoPin);
   servoOne.write(servoPos);
 
@@ -53,87 +54,47 @@ void setup()
   ltr.configInterrupt(true, LTR390_MODE_UVS);
 }
 
-// Control loop
 void loop()
 {
   // Get data from LTR and potentiometer
   GetSensorData();
 
-  // Mode selector
-  // Set the servos to be in 'OFF' postion
-  if ((dial < 256) && (previousValue != 1))
+  // Mode control
+  if ((dial < 256))
   {
-    // If 'ON' sunglasses down
-    servoPos = up;
-    servoOne.write(servoPos);
-    servo2Pos = down;
-    servoTwo.write(servo2Pos);
-
-    // Note which mode we were just in
-    previousValue = 1;
+    // If 'OFF' sunglasses up
+    sunglassesUp();
   }
   // Set servos to be in 'UV Mode' sensitive mode
-  else if ((dial >= 256) && (dial < 512) && (previousValue != 2) && (uvLight > uvDanger))
+  else if ((dial >= 256) && (dial < 512) && (uvLight > uvDanger))
   {
     // If UV light reaches danger levels, sunglasses down
-    servoPos = down;
-    servoOne.write(servoPos);
-
-    servo2Pos = up;
-    servoTwo.write(servo2Pos);
-
-    previousValue = 2;
+    sunglassesDown();
   }
 
-  else if ((dial >= 256) && (dial < 512) && (previousValue != 6) && (uvLight < uvDanger))
+  else if ((dial >= 256) && (dial < 512) && (uvLight < uvDanger))
   {
     // If UV light is less than danger levels, sunglasses up
-    servoPos = up;
-    servoOne.write(servoPos);
-
-    servo2Pos = down;
-    servoTwo.write(servo2Pos);
-
-    previousValue = 6;
+    sunglassesUp();
   }
   // Ambient light control
-  else if ((dial >= 512) && (dial < 768) && (previousValue != 3) && (amLight > amDanger))
+  else if ((dial >= 512) && (dial < 768) && (amLight > amDanger))
   {
     // If light level is greater than the comfortable level, sunglasses down
     Serial.println("AMmode");
-
-    servoPos = down;
-    servoOne.write(servoPos);
-
-    servo2Pos = up;
-    servoTwo.write(servo2Pos);
-
-    previousValue = 3;
+    sunglassesDown();
   }
-  else if ((dial >= 512) && (dial < 768) && (previousValue != 4) && (amLight < amDanger))
+  else if ((dial >= 512) && (dial < 768) && (amLight < amDanger))
   {
     // If light level is less than the comfortable level, sunglasses up
     Serial.println("AMmode");
-
-    servoPos = up;
-    servoOne.write(servoPos);
-
-    servo2Pos = down;
-    servoTwo.write(servo2Pos);
-
-    previousValue = 4;
+    sunglassesUp();
   }
 
-  else if ((dial >= 768) && (previousValue != 5))
+  else if (dial >= 768)
   {
-    // If 'OFF' sunglasses up
-    servoPos = down;
-    servoOne.write(servoPos);
-
-    servo2Pos = up;
-    servoTwo.write(servo2Pos);
-
-    previousValue = 5;
+    // If 'ON' sunglasses down
+    sunglassesDown();
   }
 }
 
@@ -157,5 +118,41 @@ void GetSensorData()
     Serial.print("AMBIENT Light Level: ");
     amLight = ltr.readALS();
     Serial.println(amLight);
+  }
+}
+
+void sunglassesDown()
+{
+  // If the sunglasses are up, then...
+  if (sunglassesState == false)
+  {
+    // Rotate the sunglasses down
+    servoOne.write(down);
+    servoTwo.write(up);
+
+    // Update sunglasses state
+    sunglassesState = true;
+  }
+  else
+  {
+    // Do nothing, the sunglasses are already down
+  }
+}
+
+void sunglassesUp()
+{
+  // If the sunglasses are down, then ...
+  if (sunglassesState == true)
+  {
+    // Rotate the sunglasses up
+    servoOne.write(up);
+    servoTwo.write(down);
+
+    // Update the sunglasses state
+    sunglassesState = false;
+  }
+  else
+  {
+    // Do nothing, the sunglasses are already up
   }
 }
