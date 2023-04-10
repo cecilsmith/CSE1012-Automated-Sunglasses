@@ -26,6 +26,11 @@ int dial = 0;
 
 bool sunglassesState = false;
 
+// Declare functions
+void sunglassesDown();
+void sunglassesUp();
+void GetSensorData();
+
 void setup()
 {
   // Attach servos and write inital position (DOWN)
