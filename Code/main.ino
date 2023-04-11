@@ -1,3 +1,12 @@
+// Code written by Nathanael Smith, Julian Bookhout, and Samuel Helgeson
+// Sample code and libraries from Adafriut--the supplier of the LTR390 sensor.
+
+/*
+The code in this program reads UV light and ambient light data from the LTR390. 
+From there, thresholds are used to determine whether the sunglasses should be rotated up
+or down to protect the user. A potentiometer is read and used to select modes: 'OFF', 'AMBIENT', 'UV', and 'ON'.
+*/
+
 #include <Arduino.h>
 #include "Adafruit_LTR390.h"
 #include <Servo.h>
