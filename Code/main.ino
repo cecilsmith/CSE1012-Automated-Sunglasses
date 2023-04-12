@@ -2,7 +2,7 @@
 // Sample code and libraries from Adafriut--the supplier of the LTR390 sensor.
 
 /*
-The code in this program reads UV light and ambient light data from the LTR390. 
+The code in this program reads UV light and ambient light data from the LTR390.
 From there, thresholds are used to determine whether the sunglasses should be rotated up
 or down to protect the user. A potentiometer is read and used to select modes: 'OFF', 'AMBIENT', 'UV', and 'ON'.
 */
@@ -31,7 +31,7 @@ float uvDanger = 30; // found in testing
 float amLight;
 float amDanger = 100; // for testing purposes, find the actual dangerous levels
 
-int dial = 0;
+double dial = 0;
 
 bool sunglassesState = false;
 
@@ -115,7 +115,8 @@ void loop()
 void GetSensorData()
 {
   // Get potentiometer readings
-  dial = analogRead(potPin);
+  dial = analogRead(potPin) * 1024.0 / 693; // Factor for 3.3V operating voltage
+  Serial.println(dial);
 
   // Check for LTR data
   if (ltr.newDataAvailable())
